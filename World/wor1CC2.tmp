@@ -1,0 +1,118 @@
+[gd_scene load_steps=22 format=3 uid="uid://befdyj6tvodlt"]
+
+[ext_resource type="Texture2D" uid="uid://bcor3pvq8ij1f" path="res://Textures/dirt_full_new.png" id="1_6dvj5"]
+[ext_resource type="PackedScene" uid="uid://8my21p2lrba0" path="res://Player/player.tscn" id="2_2q43l"]
+[ext_resource type="PackedScene" uid="uid://wbek3ohrgtw0" path="res://Utility/enemy_spawner.tscn" id="3_q1djt"]
+[ext_resource type="PackedScene" uid="uid://dvf3k6ch22302" path="res://Enemy/enemy_kobold_weak.tscn" id="4_wprcl"]
+[ext_resource type="Script" path="res://Utility/spawn_info.gd" id="5_n5pyc"]
+[ext_resource type="PackedScene" uid="uid://dksh6f8ed3j0m" path="res://Enemy/enemy_kobold_strong.tscn" id="6_2poty"]
+[ext_resource type="PackedScene" uid="uid://obs0ig6hl7ho" path="res://Objects/experience_gem.tscn" id="6_28lm8"]
+[ext_resource type="PackedScene" uid="uid://dl7vdp0fk88ss" path="res://Enemy/enemy_cyclops.tscn" id="7_xjt8x"]
+[ext_resource type="PackedScene" uid="uid://dkjrfjn4ajch8" path="res://Enemy/enemy_juggernaut.tscn" id="8_mqfyf"]
+[ext_resource type="PackedScene" uid="uid://cpfhh7th863rt" path="res://Enemy/enemy_super.tscn" id="9_3audm"]
+[ext_resource type="AudioStream" uid="uid://bl7gys1kbe4jd" path="res://Audio/Music/battleThemeA.mp3" id="11_y6v71"]
+[ext_resource type="Script" path="res://Audio/Music/snd_Music.gd" id="12_v0q8r"]
+
+[sub_resource type="Resource" id="Resource_67uh7"]
+script = ExtResource("5_n5pyc")
+time_start = 0
+time_end = 30
+enemy = ExtResource("4_wprcl")
+enemy_num = 1
+enemy_spawn_delay = 0
+
+[sub_resource type="Resource" id="Resource_8tlyw"]
+script = ExtResource("5_n5pyc")
+time_start = 30
+time_end = 210
+enemy = ExtResource("4_wprcl")
+enemy_num = 2
+enemy_spawn_delay = 0
+
+[sub_resource type="Resource" id="Resource_cnroy"]
+script = ExtResource("5_n5pyc")
+time_start = 60
+time_end = 180
+enemy = ExtResource("6_2poty")
+enemy_num = 1
+enemy_spawn_delay = 1
+
+[sub_resource type="Resource" id="Resource_k33yv"]
+script = ExtResource("5_n5pyc")
+time_start = 180
+time_end = 210
+enemy = ExtResource("7_xjt8x")
+enemy_num = 1
+enemy_spawn_delay = 2
+
+[sub_resource type="Resource" id="Resource_jau4k"]
+script = ExtResource("5_n5pyc")
+time_start = 210
+time_end = 240
+enemy = ExtResource("6_2poty")
+enemy_num = 2
+enemy_spawn_delay = 0
+
+[sub_resource type="Resource" id="Resource_4fwg3"]
+script = ExtResource("5_n5pyc")
+time_start = 240
+time_end = 270
+enemy = ExtResource("7_xjt8x")
+enemy_num = 1
+enemy_spawn_delay = 0
+
+[sub_resource type="Resource" id="Resource_vips0"]
+script = ExtResource("5_n5pyc")
+time_start = 240
+time_end = 240
+enemy = ExtResource("8_mqfyf")
+enemy_num = 1
+enemy_spawn_delay = 0
+
+[sub_resource type="Resource" id="Resource_72py8"]
+script = ExtResource("5_n5pyc")
+time_start = 270
+time_end = 300
+enemy = ExtResource("6_2poty")
+enemy_num = 4
+enemy_spawn_delay = 0
+
+[sub_resource type="Resource" id="Resource_v3ga8"]
+script = ExtResource("5_n5pyc")
+time_start = 300
+time_end = 300
+enemy = ExtResource("9_3audm")
+enemy_num = 1
+enemy_spawn_delay = 0
+
+[node name="World" type="Node2D"]
+
+[node name="Background" type="Sprite2D" parent="."]
+texture_filter = 2
+texture_repeat = 2
+texture = ExtResource("1_6dvj5")
+region_enabled = true
+region_rect = Rect2(0, 0, 4000, 4000)
+
+[node name="Player" parent="." instance=ExtResource("2_2q43l")]
+position = Vector2(0, 0)
+
+[node name="EnemySpawner" parent="." instance=ExtResource("3_q1djt")]
+spawns = Array[ExtResource("5_n5pyc")]([SubResource("Resource_67uh7"), SubResource("Resource_8tlyw"), SubResource("Resource_cnroy"), SubResource("Resource_k33yv"), SubResource("Resource_jau4k"), SubResource("Resource_4fwg3"), SubResource("Resource_vips0"), SubResource("Resource_72py8"), SubResource("Resource_v3ga8")])
+
+[node name="Loot" type="Node2D" parent="." groups=["loot"]]
+
+[node name="ExperienceGem" parent="Loot" instance=ExtResource("6_28lm8")]
+position = Vector2(-50, -44)
+experience = 50
+
+[node name="snd_Music" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+stream = ExtResource("11_y6v71")
+volume_db = -19.927
+pitch_scale = 0.5
+script = ExtResource("12_v0q8r")
+
+[connection signal="playerdeath" from="Player" to="snd_Music" method="_on_player_playerdeath"]
+
+[editable path="EnemySpawner"]
